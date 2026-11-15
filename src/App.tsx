@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useProgress } from './storage'
 import { Dashboard } from './views/Dashboard'
 import { Study } from './views/Study'
+import { AnswerKey } from './views/AnswerKey'
 import { Exam } from './views/Exam'
 import { Review } from './views/Review'
 import { Guide } from './views/Guide'
@@ -9,6 +10,7 @@ import { Settings } from './views/Settings'
 
 const VIEWS = {
   dashboard: 'Dashboard',
+  key: 'Answer Key',
   study: 'Study',
   exam: 'Practice Exam',
   review: 'Smart Review',
@@ -56,6 +58,7 @@ export default function App() {
       </header>
       <main>
         {view === 'dashboard' && <Dashboard progress={progress} go={go} />}
+        {view === 'key' && <AnswerKey />}
         {view === 'study' && <Study progress={progress} onAnswer={recordAnswer} onToggleFlag={toggleFlag} onGoToSettings={toSettings} />}
         {view === 'exam' && (
           <Exam progress={progress} onAnswer={recordAnswer} onFinish={recordExam} onToggleFlag={toggleFlag} onGoToSettings={toSettings} />

@@ -13,6 +13,8 @@
   --bad-soft: #fbe7e5;
   --warn: #9a6400;
   --seen: #c9d6f2;
+  --hl: #c98a00;
+  --hl-soft: #fff3c4;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
   color: var(--text);
@@ -34,8 +36,34 @@
     --bad-soft: #3a1d1b;
     --warn: #f2b84b;
     --seen: #2f3d5c;
+    --hl: #f2b84b;
+    --hl-soft: #3d3112;
   }
 }
+
+/* Reading help: text size and easier-to-read text */
+:root[data-text-size='1'] { font-size: 18px; }
+:root[data-text-size='2'] { font-size: 21px; }
+:root.readable {
+  font-family: 'Lexend', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.75; letter-spacing: 0.03em; word-spacing: 0.12em;
+}
+:root.readable .q-text { font-weight: 500; line-height: 1.6; }
+:root.readable p, :root.readable li { max-width: 70ch; }
+
+/* Highlight whatever is being read aloud */
+.reading { outline: 3px solid var(--hl); outline-offset: 2px; }
+.q-text.reading { background: var(--hl-soft); border-radius: 6px; }
+.choice.reading { border-color: var(--hl); background: var(--hl-soft); }
+.speak { padding: 4px 10px; font-size: 0.9rem; }
+.msg .link { display: block; margin-top: 4px; }
+.msg.user .link { color: inherit; }
+
+.setting { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 10px 0; }
+.setting-label { min-width: 70px; font-weight: 600; }
+.setting select { font: inherit; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); max-width: 100%; }
+.segmented { display: flex; gap: 4px; flex-wrap: wrap; }
+hr { border: none; border-top: 1px solid var(--border); margin: 16px 0 6px; }
 
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); }
@@ -155,6 +183,19 @@ ul.plain { list-style: none; padding: 0; margin: 0; }
 .result .big { font-size: 2.6rem; font-weight: 800; }
 .result.ok { border-color: var(--ok); background: var(--ok-soft); }
 .result.bad { border-color: var(--bad); background: var(--bad-soft); }
+
+/* Answer key */
+.key-tools { margin: 0 0 12px; }
+.key-tools .toggle { margin: 0; }
+.key-list { list-style: none; padding: 0; margin: 0; }
+.key-item { scroll-margin: 120px; }
+.key-q { font-weight: 600; margin: 8px 0 10px; line-height: 1.45; }
+.key-a { display: flex; gap: 10px; align-items: flex-start; padding: 8px 12px; border-radius: 8px; background: var(--ok-soft); border: 1.5px solid var(--ok); }
+.key-letter { font-weight: 700; color: var(--ok); white-space: nowrap; }
+.key-why { margin: 10px 0 0; }
+.speaking { background: var(--hl-soft); border-radius: 6px; box-shadow: 0 0 0 3px var(--hl-soft); }
+.key-a.speaking { border-color: var(--hl); }
+.small-figure { max-width: 280px; }
 
 /* Review */
 .decks { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }

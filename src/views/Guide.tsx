@@ -35,6 +35,11 @@ export function Guide() {
           <li><strong>Pay the FCC fee.</strong> After you pass, the FCC emails you a link to pay the $35 application fee in CORES. Your application isn't processed until you pay.</li>
           <li><strong>Wait for your call sign.</strong> Once your license appears in the FCC ULS database, you may transmit. The FCC emails you a link to download your official license.</li>
         </ol>
+        <p>
+          <strong>Need help reading the exam?</strong> FCC rules (§97.509(k)) require the VE team to accommodate examinees whose
+          disabilities call for a special exam procedure, such as having the questions read aloud. Contact the team <em>before</em> the
+          session to arrange it. They may ask for a doctor's note describing the need.
+        </p>
       </div>
 
       <div className="card">

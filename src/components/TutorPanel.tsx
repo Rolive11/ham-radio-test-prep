@@ -3,6 +3,7 @@ import type { Question } from '../types'
 import { askTutor, describeError, systemPromptFor, type TutorMessage } from '../tutor'
 import { getApiKey } from '../storage'
 import { Markdown } from './Markdown'
+import { getA11y, speak, speechSupported, stopIfReading, stopSpeaking, useReading } from '../speech'
 
 interface Props {
   question: Question | null
@@ -29,17 +30,22 @@ export function TutorPanel({ question, onGoToSettings }: Props) {
   const [input, setInput] = useState('')
   const abortRef = useRef<AbortController | null>(null)
   const apiKey = getApiKey()
+  const reading = useReading()
 
   // Reset the conversation when the question changes.
   useEffect(() => {
     abortRef.current?.abort()
+    stopIfReading('tutor:')
     setMessages([])
     setStreaming('')
     setError('')
     setBusy(false)
   }, [question?.id])
 
-  useEffect(() => () => abortRef.current?.abort(), [])
+  useEffect(() => () => {
+    abortRef.current?.abort()
+    stopIfReading('tutor:')
+  }, [])
 
   async function send(text: string) {
     if (!text.trim() || busy || !apiKey) return
@@ -54,6 +60,7 @@ export function TutorPanel({ question, onGoToSettings }: Props) {
     try {
       const reply = await askTutor(apiKey, systemPromptFor(question), history, (d) => setStreaming((s) => s + d), ctrl.signal)
       setMessages([...history, reply])
+      if (getA11y().autoRead) speak(`tutor:${history.length}`, [textOf(reply)])
     } catch (e) {
       // Drop the unanswered turn so the conversation stays valid and the question can be retried.
       setMessages(messages)
@@ -88,11 +95,20 @@ export function TutorPanel({ question, onGoToSettings }: Props) {
             ))}
           </div>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={`msg ${m.role}`}>
-            {m.role === 'assistant' ? <Markdown text={textOf(m)} /> : textOf(m)}
-          </div>
-        ))}
+        {messages.map((m, i) => {
+          const id = `tutor:${i}`
+          const active = reading.id === id
+          return (
+            <div key={i} className={`msg ${m.role}${active ? ' reading' : ''}`}>
+              {m.role === 'assistant' ? <Markdown text={textOf(m)} /> : textOf(m)}
+              {m.role === 'assistant' && speechSupported && (
+                <button className="link small" onClick={() => (active ? stopSpeaking() : speak(id, [textOf(m)]))}>
+                  {active ? '⏹ Stop' : '🔊 Read aloud'}
+                </button>
+              )}
+            </div>
+          )
+        })}
         {busy && (
           <div className="msg assistant">
             {streaming ? <Markdown text={streaming} /> : <span className="muted">Thinking…</span>}
